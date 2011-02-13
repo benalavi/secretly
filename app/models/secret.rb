@@ -14,7 +14,7 @@ class Secret < Ohm::Model
   
   class << self
     def hash_url(url)
-      Digest::SHA1.hexdigest(monk_settings(:hash_key) + "::" + url.to_s)
+      Digest::SHA1.hexdigest(ENV["HASH_KEY"] + "::" + url.to_s)
     end
   end
   
@@ -45,7 +45,7 @@ class Secret < Ohm::Model
     # use as our URL/encryption key, then we'll SHA1 that again before storing
     # to ensure that the user got the key from the URL they were given and 
     # didn't hack it from the database.
-    @url = Digest::SHA1.hexdigest(Time.now.to_i.to_s + "::" + monk_settings(:hash_key) + "::" + rand(10**10).to_s(36))
+    @url = Digest::SHA1.hexdigest(Time.now.to_i.to_s + "::" + ENV["HASH_KEY"] + "::" + rand(10**10).to_s(36))
     self.encrypted_url = self.class.hash_url(@url)
     
     # Encrypt the content against our key
