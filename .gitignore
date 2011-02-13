@@ -1,0 +1,8 @@
+.vagrant
+.sass-cache
+db/*.sqlite3
+config/*.yml
+config/unicorn.rb
+deploy/*
+log/*
+tmp/*

@@ -1,0 +1,18 @@
+%form{ action: url(:secrets), method: "POST", id: "new_secret" }
+  %h1 Secret
+  %textarea{ name: "secret[content]", id: "secret_content" }
+  .field
+    %label{ for: "secret[expires_in]" } Expires
+    %select{ name: "secret[expires_in]", id: "secret_expires_in" }
+      %option{ value: "1" } 1 hour
+      %option{ value: "12" } 12 hours
+      %option{ value: "24", selected: "selected" } 24 hours
+      %option{ value: "168" } 1 week
+  -#.field
+  -#  %label{ for: "secret[password]" } Password
+  -#  %input{ name: "secret[password]", id: "secret_password" }
+  -#.field
+  -#  %label{ for: "secret[password_verification]" } Verify password
+  -#  %input{ name: "secret[password_verification]", id: "secret_password_verification" }
+  %input{ type: "submit", name: "commit", value: "Save" }
+      

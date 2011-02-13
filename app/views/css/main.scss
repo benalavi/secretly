@@ -1,0 +1,97 @@
+@import "css3";
+
+@mixin clearfix {
+  overflow: hidden;
+  overflow: -moz-scrollbars-none;
+  display: inline-block;
+}
+
+body, h1, h2, h3, h4, input, select {
+  font-family: "Helvetica Neue","Helvetica",Arial,sans-serif;
+  color: #484848;
+  font-size: 12px;
+}
+
+body {
+  background-color: #eee;
+  text-shadow: 0 1px 0 #FFFFFF;
+  width: 680px;
+  margin: 20px auto;
+}
+
+h1 {
+  font-size: 3.0em;
+  letter-spacing: -0.05em;
+  margin-bottom: 20px;
+}
+
+.field {
+  margin: 10px 0px;
+}
+
+label {
+  float: left;
+  font-weight: bold;
+  margin-right: 4px;
+  width: 100px;
+  padding-top: 6px;
+}
+
+input, pre, textarea {
+  @include border-radius(5px);
+  @include box-shadow(0, 1px, 1px, #333, inset);
+  border: 1px solid transparent;
+  color: #666666;
+  font-size: 12px;
+  padding: 3px 5px;
+}
+
+pre, textarea {
+  @include border-radius(5px);
+  @include box-shadow(0, 1px, 1px, #333, inset);
+  background-color: #fff;
+  padding: 10px;
+  clear: both;
+  display: block;
+  margin-bottom: 20px;
+}
+
+input[type=submit] {
+  @include linear-gradient(#FAA51A, #F47A20);
+  @include border-radius(5px);
+  border: 1px solid #DA7C0C;
+  color: #FEF4E9;
+  cursor: pointer;
+  display: inline-block;
+  outline: medium none;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  vertical-align: baseline;
+  font-weight: bold;
+  float: right;
+  &:hover {
+    @include linear-gradient(darken(#FAA51A, 10%), darken(#F47A20, 10%));
+  }
+}
+
+#content {
+  @include clearfix;
+  @include border-radius(8px);
+  @include box-shadow(0, 2px, 3px, #eaeaea);
+  width: 640px;
+  padding: 20px;
+  background-color: #F4F4F4;
+  border: 1px solid #E2E2E2;
+  text-shadow: 0 2px 0 #FFFFFF;
+}
+
+#new_secret textarea {
+  width: 620px;
+  height: 300px;
+}
+
+.note {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
