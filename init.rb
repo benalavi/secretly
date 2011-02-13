@@ -22,7 +22,7 @@ class Main < Monk::Glue
 end
 
 # Connect to redis database.
-Ohm.connect(ENV["REDIS_URL"])
+Ohm.connect(url: ENV["REDIS_URL"])
 
 # Load all application files.
 Dir[root_path("app/**/*.rb")].each do |file|
