@@ -12,7 +12,6 @@ require "monk/glue"
 require "ohm"
 require "haml"
 require "sass"
-require "tilt"
 require "url"
 
 class Main < Monk::Glue
