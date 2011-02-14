@@ -1,3 +1,16 @@
+class Secrets < Thor
+  include Thor::Actions
+  
+  desc "expunge", "Delete all expired secrets from Redis database"
+  def expunge
+    require "./init"
+    
+    Secret.expired.each do |secret|
+      secret.delete
+    end
+  end
+end
+
 class Monk < Thor
   include Thor::Actions
 

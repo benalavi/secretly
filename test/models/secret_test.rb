@@ -1,6 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + "/../test_helper")
 
 class SecretTest < Test::Unit::TestCase
+  Ohm.flush
+  
   context "creating a Secret" do
     setup do
       @secret = Secret.create content: "Foo bar baz bang.", expires_in: 3
@@ -25,5 +27,17 @@ class SecretTest < Test::Unit::TestCase
     should "set expires_at 3 hours in the future" do
       assert_equal Time.now.hour + 3, @secret.expires_at.hour
     end
+  end
+  
+  context "finding Secrets" do
+    setup do
+      @expired = Secret.create content: "Foo bar baz bang.", expires_in: -1
+      @current = Secret.create content: "Foo bar baz bang.", expires_in: 1
+    end
+    
+    should "find only expired secrets" do
+      assert_equal 1, Secret.expired.length
+      assert_equal @expired, Secret.expired.first
+    end    
   end
 end

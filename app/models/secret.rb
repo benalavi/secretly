@@ -1,7 +1,12 @@
 require "digest/sha1"
 require "openssl"
+require "ohm/contrib"
 
 class Secret < Ohm::Model
+  include Ohm::Callbacks
+  
+  class ContentExpiredError < RuntimeError;end;
+  
   # TODO: take a password and hash that w/ the URL as the decryption key
   attr_accessor :password, :password_verification
   attr_accessor :content
@@ -14,12 +19,20 @@ class Secret < Ohm::Model
   
   class << self
     def hash_url(url)
-      Digest::SHA1.hexdigest(ENV["HASH_KEY"] + "::" + url.to_s)
+      Digest::SHA1.hexdigest(settings(:hash_key) + "::" + url.to_s)
+    end
+    
+    def expired
+      key[:expires_at].zrevrangebyscore(Time.now.to_i, 0).collect(&Secret)
     end
   end
   
   # Returns the decrypted content using the given key for decryption.
   def content(key=nil)
+    # Fail to show content when expired, in case something went wrong like the
+    # expunge cron failed.
+    raise ContentExpiredError.new("Content expired") if Time.now > self.expires_at
+    
     return @content unless @content.nil?
     
     aes = OpenSSL::Cipher::Cipher.new("AES-256-ECB")
@@ -34,10 +47,12 @@ class Secret < Ohm::Model
   end
   
   def expires_at
-    @expires_at ||= Time.parse(read_local(:expires_at))
+    @expires_at ||= Time.at(read_local(:expires_at))
   end
-    
-  def create  
+  
+  protected
+  
+  def before_create
     # Generate URL
     # Based on Time.now to help avoid collisions, hash_key to avoid
     # predictability, and a randomly generated string just for good measure.
@@ -45,7 +60,7 @@ class Secret < Ohm::Model
     # use as our URL/encryption key, then we'll SHA1 that again before storing
     # to ensure that the user got the key from the URL they were given and 
     # didn't hack it from the database.
-    @url = Digest::SHA1.hexdigest(Time.now.to_i.to_s + "::" + ENV["HASH_KEY"] + "::" + rand(10**10).to_s(36))
+    @url = Digest::SHA1.hexdigest(Time.now.to_i.to_s + "::" + settings(:hash_key) + "::" + rand(10**10).to_s(36))
     self.encrypted_url = self.class.hash_url(@url)
     
     # Encrypt the content against our key
@@ -55,6 +70,14 @@ class Secret < Ohm::Model
 
     self.encrypted_content = aes.update(@content) + aes.final
     
-    super
+    write_local(:expires_at, self.expires_at.to_i)
+  end
+  
+  def after_create
+    self.class.key[:expires_at].zadd(self.expires_at.to_i, id)
+  end
+  
+  def after_delete
+    self.class.key[:expires_at].zrem(id)
   end
 end

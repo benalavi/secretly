@@ -18,7 +18,12 @@ require "url"
 class Main < Monk::Glue
   set :app_file, __FILE__
   use Rack::Session::Cookie
-  use Rack::SSL
+  use Rack::SSL unless %w( development ).include?(RACK_ENV)
+end
+
+# Pulls settings from ENV first, then settings.yml
+def settings(key)
+  ENV[key.to_s.upcase] || monk_settings(key)
 end
 
 # Connect to redis database.

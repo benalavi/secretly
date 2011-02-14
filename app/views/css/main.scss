@@ -75,6 +75,10 @@ input[type=submit] {
   }
 }
 
+p {
+  margin-bottom: 20px;
+}
+
 #content {
   @include clearfix;
   @include border-radius(8px);
