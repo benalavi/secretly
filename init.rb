@@ -27,7 +27,7 @@ def settings(key)
 end
 
 # Connect to redis database.
-Ohm.connect(url: ENV["REDIS_URL"])
+Ohm.connect(url: settings(:redis_url))
 
 # Load all application files.
 Dir[root_path("app/**/*.rb")].each do |file|
