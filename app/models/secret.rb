@@ -47,7 +47,7 @@ class Secret < Ohm::Model
   end
   
   def expires_at
-    @expires_at ||= Time.at(read_local(:expires_at))
+    @expires_at ||= Time.parse(read_local(:expires_at))
   end
   
   protected
@@ -69,8 +69,6 @@ class Secret < Ohm::Model
     aes.key = @url
 
     self.encrypted_content = aes.update(@content) + aes.final
-    
-    write_local(:expires_at, self.expires_at.to_i)
   end
   
   def after_create
