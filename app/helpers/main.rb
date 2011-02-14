@@ -21,11 +21,13 @@ class Main
     # Example:
     #   != partial :games, :players => @players
     def partial(template, locals = {})
-      haml(template, {:layout => false}, locals)
+      haml(template, { layout: false }, locals)
     end
     
     def secret_url(secret)
-      "http://#{request.host}#{request.port == "80" ? "" : ":#{request.port}"}/secrets/#{secret.url}"
+      (request.secure? ? "https" : "http") +
+      "://" + request.host + (%w( 80 443 ).include?(request.port) ? "" : ":#{request.port}") +
+      "/secrets/" + secret.url
     end
     
     def nice_date(date)
