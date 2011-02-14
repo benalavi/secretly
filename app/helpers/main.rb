@@ -26,7 +26,7 @@ class Main
     
     def secret_url(secret)
       (request.secure? ? "https" : "http") +
-      "://" + request.host + (%w( 80 443 ).include?(request.port) ? "" : ":#{request.port}") +
+      "://" + request.host + (%w( 80 443 ).include?(request.port.to_s) ? "" : ":#{request.port}") +
       "/secrets/" + secret.url
     end
     
