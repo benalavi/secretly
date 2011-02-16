@@ -33,5 +33,10 @@ class Main
     def nice_date(date)
       date.strftime(Date.today == date ? "" : "%m/%d/%Y @ " + "%I:%M%P (%Z)")
     end
+    
+    def google_analytics
+      partial :"_google_analytics.html"
+    rescue Errno::ENOENT
+    end
   end
 end

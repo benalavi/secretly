@@ -6,3 +6,4 @@ config/unicorn.rb
 deploy/*
 log/*
 tmp/*
+app/views/_google_analytics.html.haml
