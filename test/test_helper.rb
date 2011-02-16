@@ -2,6 +2,9 @@ ENV['RACK_ENV'] = 'test'
 
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "init"))
 
+gem "test-unit"
+require "test/unit"
+require "test/unit/autorunner"
 require "rack/test"
 require "contest"
 require "override"
